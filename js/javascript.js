@@ -5,16 +5,19 @@ var answer = document.querySelector("#answer");
 var choiceButton = document.querySelector("#choice");
 choiceButton.addEventListener("click", doSomething, false);
 var container = document.querySelector(".container");
+var divEL = document.querySelector("#topPart")
 var choiceButtons = document.querySelector(".choice");
 
 var A = document.querySelector("#A");
 var B = document.querySelector("#B");
 var C = document.querySelector("#C");
 var D = document.querySelector("#D");
+
+
 var correct = new Audio("#");
 var wrong = new Audio("#");
 
-
+// quetion store
 var quetions = [
     {
         title:"____ styles a webpage browser",
@@ -52,12 +55,13 @@ var quetions = [
     answer:"black clover"
     }
 ]
-
+const lastQuestion = quetions.length - 1;
 var quetionindex = 0;
 var scoreindex = 0;
+var i = 0;
 
 
-
+// A, B, C, D
 function showque(){
  quetion.textContent = quetions[quetionindex].title  
  A.textContent = quetions[quetionindex].choices[0]
@@ -67,12 +71,17 @@ function showque(){
 };
 showque();
 
+
+
+
+// rotate quetion
+
 var currentquetion;
 function navigate(direction) {
     quetionindex = quetionindex + direction;
     if (quetionindex < 0) { 
         quetionindex =quetions.length - 1; 
-    } else if (quetionindex >quetions.length - 1) { 
+    } else if (quetionindex > quetions.length -1) { 
       quetionindex = 0;
     }
     currentquetion = quetions[quetionindex];
@@ -80,6 +89,10 @@ function navigate(direction) {
     
 };
 
+
+
+
+// checking answer - move on to next quetion
 function doSomething(e){
     if(e.target !== e.currentTarget) {
         var clickedItem = e.target.id;
@@ -88,7 +101,7 @@ function doSomething(e){
 
     e.stopPropagation();
 
-    for(var i =0; i < quetions.length; i++){
+    for(i =0; i < quetions.length; i++){
        clickedItem = quetions[i];
     }    
     if(clickedItem == answer){
@@ -105,14 +118,78 @@ function doSomething(e){
 };
 
 
+function renderStatus(){
+    for(let qIndex = 0; qIndex <= lastQuestion; qIndex++){
+        status.innerHTML += "<div class='stat' id="+ qIndex +"></div>";
+    }
+}
 
+// rotate quetion
+/*
 container.addEventListener("click" , function(){
     window.location.href = quetions[quetionindex];
 });
+*/
 
 
 
 navigate(0);
+
+
+//timer 
+var timeleft = 100;
+function setTime() {
+    var timerInterval = setInterval(function() {
+      timeleft--;
+      timer.textContent = timeleft + " seconds left till end of the Test.";
+  
+      if(timeleft === 0) {
+        clearInterval(timerInterval);
+        sendMessage();
+      }
+  
+    }, 1000);
+}
+// when timer ends
+function sendMessage() {
+    if(timer.textContent = " "){
+        var h1 = document.createElement("h1");
+  
+        h1.textContent = "GAME OVER"
+        timer.appendChild(h1); 
+        gameover();
+    }
+  
+}
+  
+setTime();
+
+// defalut to change page when the games over 
+function gameover(){
+    var gameOver =alert("Game over");
+    if(i > quetions.length ){
+        gameOver;
+    }
+
+    if(gameOver){
+        function onCreated(windowInfo) {
+            console.log(`Created window: ${windowInfo.id}`);
+          }
+          
+          function onError(error) {
+            console.log(`Error: ${error}`);
+          }
+          
+          browser.browserAction.onClicked.addListener((tab) => {
+            var creating = browser.windows.create({
+              url: ["http://127.0.0.1:5500/html/HS.html"]
+            });
+            creating.then(onCreated, onError);
+          });
+    }
+
+        
+}
 
 
 
